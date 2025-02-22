@@ -23,12 +23,35 @@ type Keywords =
 { keyword: 'Snipe', value?: number } | 
 { keyword: 'Strategic', value?: never } |
 { keyword: 'Swarm', value?: never }
+type DieFace = "Accuracy" | "Hit" | "Crit" | "Blank" | "Hit Hit" | "Hit Crit" | "Blank Blank";
 
-interface Pool {
-    red?: number
-    blue?: number
-    black?: number
-}
+const RedDie: DieFace[] = ["Hit Hit", "Accuracy", "Hit", "Hit", "Crit", "Crit", "Blank", "Blank"];
+const BlueDie: DieFace[] = ["Hit", "Hit", "Hit", "Hit", "Accuracy", "Accuracy", "Crit", "Crit"];
+const BlackDie: DieFace[] = ["Hit", "Hit", "Hit", "Hit", "Hit Crit", "Hit Crit", "Blank Blank"];
+
+class DicePool {
+    private red: number;
+    private blue: number;
+    private black: number;
+  
+    constructor(red: number, blue: number, black: number) {
+      this.red = red;
+      this.blue = blue;
+      this.black = black;
+    }
+  
+    private rollDie(faces: DieFace[]): DieFace {
+      return faces[Math.floor(Math.random() * faces.length)];
+    }
+  
+    roll(): { red: DieFace[]; blue: DieFace[]; black: DieFace[] } {
+      return {
+        red: Array.from({ length: this.red }, () => this.rollDie(RedDie)),
+        blue: Array.from({ length: this.blue }, () => this.rollDie(BlueDie)),
+        black: Array.from({ length: this.black }, () => this.rollDie(BlackDie)),
+      };
+    }
+  }
 
 interface Card {
     name: string
@@ -47,8 +70,8 @@ interface Squadron extends Vehicle {
     keywords: Keywords[]
     speed: number
     dice: {
-        antiSquadron: Pool
-        battery: Pool
+        antiSquadron: DicePool
+        battery: DicePool
     }
     ace?:{
         ability: string
@@ -70,11 +93,11 @@ interface Ship extends Vehicle {
         four?: [0 | 1 | 2, 0 | 1 | 2, 0 | 1 | 2, 0 | 1 | 2]
     }
     dice: {
-        front: Pool
-        left: Pool
-        right: Pool
-        rear: Pool
-        flak: Pool
+        front: DicePool
+        left: DicePool
+        right: DicePool
+        rear: DicePool
+        flak: DicePool
     }
     shields: {
         front: number
@@ -94,3 +117,9 @@ interface Upgrade extends Card {
         cost: Commands[]
     } | true
 }
+
+
+
+// Example 
+const pool = new DicePool(2, 2, 1);
+console.log(pool.roll());
