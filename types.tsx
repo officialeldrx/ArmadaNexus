@@ -38,15 +38,20 @@ interface RollResult {
     black: DieFace[]
 }
 
+interface Clarification {
+    label: string
+    clarifications: string[]
+}
+
 interface Card {
     name: string
     cost: number
     artworkUrl: string
     faction: Factions[]
-    notes: { [key: string]: string }[]
     unique: boolean
     nickNames: string[]
-    artists?: string
+    artist?: string
+    clarifications?: Clarification[]
 }
 
 interface Vehicle extends Card {
@@ -201,13 +206,12 @@ interface Squadron extends Vehicle {
     }
 }
 
-class Ship implements Vehicle {
+interface Ship extends Vehicle {
     values: {
         command: number
         squadron: number
         engineering: number
     }
-    private commandStack: Commands[]
     tokens: Commands[]
     size: Size
     upgradeSlots: Upgrades[]
@@ -238,72 +242,68 @@ class Ship implements Vehicle {
         rightAuxiliary?: number
     }
 
-    private revealedCommand: Commands | null = null
+    // constructor(
+    //     shipData: Omit<
+    //         Ship,
+    //         "commandStack" | "setCommands" | "revealCommand" | "setCommand" | "discardCommands" | "viewCommands" | "takeToken"
+    //     >,
+    // ) {
+    //     Object.assign(this, shipData)
+    //     this.commandStack = []
+    //     this.tokens = []
+    // }
 
-    constructor(
-        shipData: Omit<
-            Ship,
-            "commandStack" | "setCommands" | "revealCommand" | "setCommand" | "discardCommands" | "viewCommands" | "takeToken"
-        >,
-    ) {
-        Object.assign(this, shipData)
-        this.commandStack = []
-        this.tokens = []
-    }
+    // setCommands(commands: Commands[]): void {
+    //     if (commands.length !== this.values.command) {
+    //         throw new Error(`Must set exactly ${this.values.command} commands.`)
+    //     }
+    //     this.commandStack = commands
+    // }
 
-    setCommands(commands: Commands[]): void {
-        if (commands.length !== this.values.command) {
-            throw new Error(`Must set exactly ${this.values.command} commands.`)
-        }
-        this.commandStack = commands
-    }
+    // revealCommand(): Commands | null {
+    //     if (this.commandStack.length === 0) {
+    //         return null
+    //     }
+    //     this.revealedCommand = this.commandStack[0]
+    //     return this.revealedCommand
+    // }
 
-    revealCommand(): Commands | null {
-        if (this.commandStack.length === 0) {
-            return null
-        }
-        this.revealedCommand = this.commandStack[0]
-        return this.revealedCommand
-    }
+    // setCommand(): void {
+    //     if (!this.revealedCommand) {
+    //         throw new Error("No command has been revealed.")
+    //     }
+    //     this.commandStack.push(this.revealedCommand)
+    //     this.commandStack.shift()
+    //     this.revealedCommand = null
+    // }
 
-    setCommand(): void {
-        if (!this.revealedCommand) {
-            throw new Error("No command has been revealed.")
-        }
-        this.commandStack.push(this.revealedCommand)
-        this.commandStack.shift()
-        this.revealedCommand = null
-    }
+    // discardCommands(count: number): void {
+    //     if (count < 0 || count > this.values.command) {
+    //         throw new Error(`Can only discard between 0 and ${this.values.command} commands.`)
+    //     }
+    //     this.commandStack = this.commandStack.slice(count)
+    // }
 
-    discardCommands(count: number): void {
-        if (count < 0 || count > this.values.command) {
-            throw new Error(`Can only discard between 0 and ${this.values.command} commands.`)
-        }
-        this.commandStack = this.commandStack.slice(count)
-    }
+    // viewCommands(): Commands[] {
+    //     return this.commandStack.slice(0, this.values.command)
+    // }
 
-    viewCommands(): Commands[] {
-        return this.commandStack.slice(0, this.values.command)
-    }
-
-    takeToken(): void {
-        if (!this.revealedCommand) {
-            throw new Error("No command has been revealed.")
-        }
-        if (this.tokens.length >= this.values.command) {
-            throw new Error("Maximum number of tokens reached.")
-        }
-        if (this.tokens.includes(this.revealedCommand)) {
-            throw new Error("Token of this type already exists.")
-        }
-        this.tokens.push(this.revealedCommand)
-        this.revealedCommand = null
-    }
+    // takeToken(): void {
+    //     if (!this.revealedCommand) {
+    //         throw new Error("No command has been revealed.")
+    //     }
+    //     if (this.tokens.length >= this.values.command) {
+    //         throw new Error("Maximum number of tokens reached.")
+    //     }
+    //     if (this.tokens.includes(this.revealedCommand)) {
+    //         throw new Error("Token of this type already exists.")
+    //     }
+    //     this.tokens.push(this.revealedCommand)
+    //     this.revealedCommand = null
+    // }
 }
 
 interface Upgrade extends Card {
-    wave: string
-    version: string
     type: Upgrades[]
     description: string
     tokens: Commands[]
