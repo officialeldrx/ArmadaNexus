@@ -7,7 +7,6 @@ import StarForge from "@/components/StarForge"
 import Nexus from "@/components/Nexus"
 import { FaSteam } from 'react-icons/fa';
 import { SessionData } from "@auth0/nextjs-auth0/types"
-import { Button } from "./ui/button"
 
 interface NavItemProps {
     label: string
