@@ -43,7 +43,7 @@ const NavItem = ({ props, onClick }: { props: NavItemProps, onClick: () => void 
         >
             <div className="min-w-16 flex justify-center items-center">
                 {props.imageSrc !== undefined
-                    ? <Image src={props.imageSrc} alt={props.imageSrc} width="32" height="32" className="rounded-full" />
+                    ? <Image src={props.imageSrc} alt={props.imageSrc} width="26" height="26" className="rounded-full" />
                     : props.icon ? props.icon : null
                 }
             </div>
