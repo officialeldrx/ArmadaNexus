@@ -60,7 +60,7 @@ export default function Navigation({ session }: { session: SessionData | null })
             <div
                 className={
                     `fixed top-0 bottom-0 left-0 right-0 z-30 pointer-events-none transition-bg tranisition-backdrop duration-200
-                    group-hover:backdrop-blur-smgroup-hover:bg-black/20
+                    group-hover:backdrop-blur-sm group-hover:bg-black/20
                     ${isMobileNavMenuOpen ? 'backdrop-blur-sm bg-black/20 pointer-events-auto' : ''}
                 `}
                 onClick={() => setIsMobileNavMenuOpen(!isMobileNavMenuOpen)}
