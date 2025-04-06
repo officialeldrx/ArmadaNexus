@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: "Teuton Fett";
-    src: url("/fonts/TeutonFett.otf") format("opentype");
+    src: url("/fonts/TeutonFett.woff") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
