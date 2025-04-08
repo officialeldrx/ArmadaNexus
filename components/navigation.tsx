@@ -42,11 +42,6 @@ const navItems: NavItemProps[] = [
         href: "/resources",
         icon: <Library className="w-5 h-5" />
     },
-    {
-        label: "Vendor",
-        href: "/vendor",
-        icon: <Store className="w-5 h-5" />
-    },
 ]
 
 const NavItem = ({ props, onClick }: { props: NavItemProps, onClick: () => void }) => {
@@ -112,6 +107,15 @@ export default function Navigation() {
                         onClick={() => setIsMobileNavMenuOpen(false)}
                     />
                 ))}
+
+                {user?.roles?.includes('vendor') && <NavItem
+                    props={{
+                        label: 'Vendor',
+                        href: '/vendor',
+                        icon: <Store className="w-5 h-5" />,
+                    }}
+                    onClick={() => setIsMobileNavMenuOpen(false)}
+                />}
 
                 <div className="flex-grow" />
 
