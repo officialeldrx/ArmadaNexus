@@ -1,21 +1,22 @@
 "use client"
+
 import { useState } from "react"
-import { User, Settings, Menu, X } from "lucide-react"
+import { User, Settings, Menu, X, Library, Store } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import StarForge from "@/components/StarForge"
 import Nexus from "@/components/Nexus"
-import { FaSteam } from 'react-icons/fa';
-import { SessionData } from "@auth0/nextjs-auth0/types"
+import { FaSteam, FaDiscord } from 'react-icons/fa'
+import { useUser } from "@/context/userContext"
 
 interface NavItemProps {
     label: string
     href: string
-    icon?: React.ReactElement,
+    icon?: React.ReactElement
     imageSrc?: string
 }
 
-const testNavItems: NavItemProps[] = [
+const navItems: NavItemProps[] = [
     {
         label: "Nexus",
         href: "/",
@@ -30,7 +31,22 @@ const testNavItems: NavItemProps[] = [
         label: "Tabletop Simulator",
         href: "https://steamcommunity.com/sharedfiles/filedetails/?id=3281524362",
         icon: <FaSteam className="w-5 h-5" />
-    }
+    },
+    {
+        label: "Discord",
+        href: "https://discord.gg/EC7hb9Jvem",
+        icon: <FaDiscord className="w-5 h-5" />
+    },
+    {
+        label: "Resources",
+        href: "/resources",
+        icon: <Library className="w-5 h-5" />
+    },
+    {
+        label: "Vendor",
+        href: "/vendor",
+        icon: <Store className="w-5 h-5" />
+    },
 ]
 
 const NavItem = ({ props, onClick }: { props: NavItemProps, onClick: () => void }) => {
@@ -52,14 +68,20 @@ const NavItem = ({ props, onClick }: { props: NavItemProps, onClick: () => void 
     )
 }
 
-export default function Navigation({ session }: { session: SessionData | null }) {
+export default function Navigation() {
     const [isMobileNavMenuOpen, setIsMobileNavMenuOpen] = useState<boolean>(false)
+    const { user } = useUser()
+    console.log(user)
+
+    const displayName = user?.displayName || "Log in"
+    const avatar = user?.picture
+    const userHref = user ? "/user" : "/auth/login"
 
     return (
         <div className="group">
             <div
                 className={
-                    `fixed top-0 bottom-0 left-0 right-0 z-30 pointer-events-none transition-bg tranisition-backdrop duration-200
+                    `fixed top-0 bottom-0 left-0 right-0 z-30 pointer-events-none transition-bg transition-backdrop duration-200
                     group-hover:backdrop-blur-sm group-hover:bg-black/20
                     ${isMobileNavMenuOpen ? 'backdrop-blur-sm bg-black/20 pointer-events-auto' : ''}
                 `}
@@ -75,7 +97,6 @@ export default function Navigation({ session }: { session: SessionData | null })
                 }
             </div>
 
-
             <div
                 className={
                     `bg-background w-16 z-50 fixed top-0 left-0 bottom-0 transition-w duration-200 overflow-hidden flex flex-col py-6
@@ -84,11 +105,11 @@ export default function Navigation({ session }: { session: SessionData | null })
                     ${isMobileNavMenuOpen ? 'pointer-coarse:translate-x-0' : ''}
                 `}
             >
-                {testNavItems.map((navItem) => (
+                {navItems.map((navItem) => (
                     <NavItem
                         key={navItem.href + navItem.label}
                         props={navItem}
-                        onClick={() => setIsMobileNavMenuOpen(!isMobileNavMenuOpen)}
+                        onClick={() => setIsMobileNavMenuOpen(false)}
                     />
                 ))}
 
@@ -96,12 +117,12 @@ export default function Navigation({ session }: { session: SessionData | null })
 
                 <NavItem
                     props={{
-                        label: session?.user.name ? session.user.name : "Log in",
-                        href: session ? "/user" : "/auth/login",
+                        label: displayName,
+                        href: userHref,
                         icon: <User className="w-5 h-5" />,
-                        imageSrc: session ? session.user.picture : undefined
+                        imageSrc: avatar
                     }}
-                    onClick={() => setIsMobileNavMenuOpen(!isMobileNavMenuOpen)}
+                    onClick={() => setIsMobileNavMenuOpen(false)}
                 />
 
                 <NavItem
@@ -110,9 +131,9 @@ export default function Navigation({ session }: { session: SessionData | null })
                         href: "/settings",
                         icon: <Settings className="w-5 h-5" />
                     }}
-                    onClick={() => setIsMobileNavMenuOpen(!isMobileNavMenuOpen)}
+                    onClick={() => setIsMobileNavMenuOpen(false)}
                 />
             </div>
         </div>
-    );
+    )
 }
