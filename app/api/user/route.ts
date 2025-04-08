@@ -6,7 +6,7 @@ import { getConnection } from "@/lib/db"
 export async function GET() {
     const session = await auth0.getSession()
 
-    if (!session?.user?.email) return null
+    if (!session?.user?.email) return
 
     const email = session.user.email
     const displayName = session.user.name || ''

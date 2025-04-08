@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 const sql = require('mssql')
 const config = {
     user: process.env.DB_USER,
