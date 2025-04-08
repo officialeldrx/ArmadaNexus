@@ -23,8 +23,6 @@ export async function GET() {
             WHERE u.email = @email
         `)
 
-    console.log(result.recordset);
-
     let userData = {
         email,
         displayName,

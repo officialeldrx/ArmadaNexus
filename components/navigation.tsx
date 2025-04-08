@@ -66,7 +66,6 @@ const NavItem = ({ props, onClick }: { props: NavItemProps, onClick: () => void 
 export default function Navigation() {
     const [isMobileNavMenuOpen, setIsMobileNavMenuOpen] = useState<boolean>(false)
     const { user } = useUser()
-    console.log(user)
 
     const displayName = user?.displayName || "Log in"
     const avatar = user?.picture
