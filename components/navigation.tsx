@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { User, Settings, Menu, X, Library, Store } from "lucide-react"
+import { User, Settings, Menu, X, Library, Store, Puzzle } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import StarForge from "@/components/StarForge"
@@ -112,6 +112,15 @@ export default function Navigation() {
                         label: 'Vendor',
                         href: '/vendor',
                         icon: <Store className="w-5 h-5" />,
+                    }}
+                    onClick={() => setIsMobileNavMenuOpen(false)}
+                />}
+
+                {user?.roles?.includes('admin') && <NavItem
+                    props={{
+                        label: 'Components',
+                        href: '/components',
+                        icon: <Puzzle className="w-5 h-5" />,
                     }}
                     onClick={() => setIsMobileNavMenuOpen(false)}
                 />}

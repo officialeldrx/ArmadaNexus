@@ -7,6 +7,7 @@ export async function middleware(request: NextRequest) {
 
     if (url.pathname === "/auth/logout") {
         response.cookies.set("nx_user", "", {
+            httpOnly: true,
             path: "/",
             expires: new Date(0),
         })

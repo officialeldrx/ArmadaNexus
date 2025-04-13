@@ -1,4 +1,4 @@
-type Factions = 'Empire' | 'Rebel' | 'Separatists' | 'Republic'
+type Faction = 'Empire' | 'Rebel' | 'Separatists' | 'Republic' | 'USMC' | 'Covenant' | 'Scum & Villiany' | 'New Republic'
 type Commands = 'Squadron' | 'Repair' | 'Navigate' | 'Concentrate Fire' | 'Any'
 type DefenseTokenType = "Brace" | "Redirect" | "Scatter" | "Evade" | "Salvo" | "Contain"
 type TokenState = "Readied" | "Exhausted" | "Discarded"
@@ -47,7 +47,7 @@ interface Card {
     name: string
     cost: number
     artworkUrl: string
-    faction: Factions[]
+    faction: Faction[]
     unique: boolean
     nickNames: string[]
     artist?: string
@@ -311,3 +311,14 @@ interface Upgrade extends Card {
         cost: Commands[]
     } | true
 }
+
+type Category = "Ship" | "Squadron" | "Game Component" | "Accessory" | "Service" | "Other"
+
+interface Listing {
+    vendor_email?: string;
+    component_name: string;
+    types: string[];
+    url: string;
+}
+
+export type { Listing, Category, Faction }

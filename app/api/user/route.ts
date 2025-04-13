@@ -1,4 +1,3 @@
-// /app/api/user/route.ts
 import { NextResponse } from 'next/server'
 import { auth0 } from "@/lib/auth0"
 import { getConnection } from "@/lib/db"
@@ -57,7 +56,7 @@ export async function GET() {
     const response = NextResponse.json(userData)
 
     response.cookies.set('nx_user', JSON.stringify(userData), {
-        httpOnly: false,
+        httpOnly: true,
         path: '/',
         maxAge: 60 * 60 * 24 * 7,
     })
