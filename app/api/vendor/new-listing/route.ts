@@ -3,7 +3,7 @@ import { getConnection } from "@/lib/db";
 import { Listing } from "@/types";
 import { auth0 } from "@/lib/auth0"
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     const session = await auth0.getSession()
     if (!session?.user?.email) return NextResponse.json({ error: 'No User found' }, { status: 500 });
 

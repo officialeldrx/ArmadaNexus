@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
             `);
 
         return NextResponse.json(result.recordset);
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error fetching component types:', error);
         return NextResponse.json(
-            { error: 'Failed to get components', details: error.message },
+            { error: 'Failed to get components', details: error },
             { status: 500 }
         );
     }

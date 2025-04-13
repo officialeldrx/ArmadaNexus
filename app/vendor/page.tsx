@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { Check } from "lucide-react"
 import type { Listing } from "@/types"
 import LoadingSymbol from "@/components/Loading"
@@ -57,32 +57,12 @@ export default function AddListing() {
         }
     }
 
-    const getComponentTypes = async () => {
-        try {
-            const response = await fetch(`/api/vendor/component-types?component_name=${selectedComponent}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-
-            if (!response.ok) throw new Error(`Error: ${response.status}`)
-
-            const data = await response.json()
-            setTypes(data)
-        } catch (error) {
-            console.error("Failed to fetch components:", error)
-        }
-    }
-
     const handleEditListing = (listing: Listing) => {
         const types: string[] = JSON.parse(String(listing.types))
 
         setSelectedListing(listing)
         setSelectedComponent(listing.component_name)
-        setSelectedTypes(types.map((current, index) => (
-            `${current}`
-        )))
+        setSelectedTypes(types.map((current) => (current)))
         setUrl(listing.url)
     }
 
@@ -129,6 +109,25 @@ export default function AddListing() {
 
     useEffect(() => {
         if (selectedComponent === "") return
+
+        const getComponentTypes = async () => {
+            try {
+                const response = await fetch(`/api/vendor/component-types?component_name=${selectedComponent}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+
+                if (!response.ok) throw new Error(`Error: ${response.status}`)
+
+                const data = await response.json()
+                setTypes(data)
+            } catch (error) {
+                console.error("Failed to fetch components:", error)
+            }
+        }
+
         getComponentTypes()
     }, [selectedComponent])
 
@@ -192,12 +191,11 @@ export default function AddListing() {
                                 <Label>Listing Types</Label>
                                 <Select
                                     value=""
-                                    onValueChange={(value) => {
-                                        console.log(value)
+                                    onValueChange={(value) =>
                                         selectedTypes.includes(value)
                                             ? setSelectedTypes((prev) => prev.filter((type) => type !== value))
                                             : setSelectedTypes((prev) => [...prev, value])
-                                    }}
+                                    }
                                 >
                                     <SelectTrigger>
                                         {!!selectedTypes.length ? selectedTypes.toString().replaceAll(",", ", ") : "Select Types"}

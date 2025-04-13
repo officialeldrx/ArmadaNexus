@@ -1,7 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
-
 export default function LoadingSymbol() {
     return (
         <div className="flex items-center justify-center h-full w-full  scale-50">
