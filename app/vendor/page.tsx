@@ -23,7 +23,7 @@ export default function AddListing() {
 
     const getComponents = async () => {
         try {
-            const response = await fetch("/api/vendor/components", {
+            const response = await fetch("/api/vendor/user-available-components", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -80,7 +80,7 @@ export default function AddListing() {
             url: url,
         }
 
-        const response = await fetch("/api/vendor/new-listing", {
+        const response = await fetch("/api/vendor/user-listings", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -130,6 +130,14 @@ export default function AddListing() {
 
         getComponentTypes()
     }, [selectedComponent])
+
+    useEffect(() => {
+        if (!types.length) return
+
+        setSelectedTypes(prev =>
+            prev.filter(type => types.some(t => t.type === type))
+        )
+    }, [types])
 
     return (
         <div className="container max-w-2xl py-10">

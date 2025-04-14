@@ -1,23 +1,17 @@
 "use client"
 import { useState, useEffect } from "react"
-// import { useUser } from "@/context/userContext"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { Check } from "lucide-react"
-// import LoadingSymbol from "@/components/Loading"
 
 export default function AddListing() {
-    // const { user } = useUser()
     const [components, setComponents] = useState<{ component_name: string }[]>([])
-    // const [userListings, setUserListings] = useState<Listing[]>([])
     const [types, setTypes] = useState<{ type: string }[]>([])
     const [selectedComponent, setSelectedComponent] = useState<string>("")
     const [selectedTypes, setSelectedTypes] = useState<string[]>([])
-    const [url, setUrl] = useState<string>("")
-    // const [loading, setLoading] = useState<boolean>(true)
 
     const getComponents = async () => {
         try {
@@ -37,38 +31,48 @@ export default function AddListing() {
         }
     }
 
+    const getTypes = async () => {
+        try {
+            const response = await fetch("/api/vendor/types", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+
+            if (!response.ok) throw new Error(`Error: ${response.status}`)
+
+            const data = await response.json()
+            setTypes(data)
+        } catch (error) {
+            console.error("Failed to fetch types:", error)
+        }
+    }
+
     const handleSubmit = async () => {
-        // const listingData: Listing = {
-        //     component_name: selectedComponent,
-        //     types: selectedTypes,
-        //     url: url,
-        // }
+        const listingData: { component_name: string, types: string[] } = {
+            component_name: selectedComponent,
+            types: selectedTypes,
+        }
 
-        // const response = await fetch("/api/vendor/new-listing", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(listingData),
-        // })
+        const response = await fetch("/api/vendor/components", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(listingData),
+        })
 
-        // if (response.ok) {
-        //     // Refresh the listings
-        //     getUserListings()
-        //     // Reset the form
-        //     resetForm()
-        // }
+        if (response.ok) {
+            setSelectedComponent('')
+            setTypes([])
+        }
     }
 
     useEffect(() => {
+        getTypes()
         getComponents()
     }, [])
-
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         setLoading(false)
-    //     }, 1000)
-    // }, [userListings])
 
     useEffect(() => {
         if (selectedComponent === "") return
@@ -85,9 +89,12 @@ export default function AddListing() {
                 if (!response.ok) throw new Error(`Error: ${response.status}`)
 
                 const data = await response.json()
-                setTypes(data)
+                setSelectedTypes(data.map((type: { type: string }) => {
+                    console.log(type)
+                    return (type.type)
+                }))
             } catch (error) {
-                console.error("Failed to fetch components:", error)
+                console.error("Failed to fetch components types:", error)
             }
         }
 
@@ -108,12 +115,17 @@ export default function AddListing() {
                                 onValueChange={(value) => {
                                     setSelectedComponent(value)
                                     setSelectedTypes([])
-                                    setUrl('')
                                 }}
                             >
-                                <SelectTrigger>
-                                    {selectedComponent !== "" ? selectedComponent : 'Select Component'}
-                                </SelectTrigger>
+                                <div className="grid grid-cols-[1fr,auto] gap-2">
+                                    <Input
+                                        value={selectedComponent}
+                                        onChange={(e) => setSelectedComponent(e.target.value)}
+                                        onClick={(e) => e.preventDefault()}
+                                    />
+                                    <SelectTrigger>
+                                    </SelectTrigger>
+                                </div>
 
                                 <SelectContent>
                                     {components.map((component) => (
@@ -154,14 +166,9 @@ export default function AddListing() {
                             </div>
                         )}
 
-                        <div>
-                            <Label>Listing Url</Label>
-                            <Input value={url} onChange={(e) => setUrl(e.target.value)} />
-                        </div>
-
                         <div className="w-full justify-end flex pt-3">
-                            <Button disabled={url === "" || selectedComponent === "" || !selectedTypes.length} onClick={handleSubmit}>
-                                Submit
+                            <Button disabled={selectedComponent === "" || !selectedTypes.length} onClick={handleSubmit}>
+                                Update Component Types
                             </Button>
                         </div>
                     </div>
